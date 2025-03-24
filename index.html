@@ -3,9 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaleNest</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>TaleNest - Online Library</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+<body>
+    <header>
+        <h1>TaleNest</h1>
+        <nav>
+            <button id="login">Login</button>
+            <button id="signup">Sign Up</button>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="book-list">
+            <h2>Trending Books</h2>
+            <div id="books"></div>
+        </section>
+        
+        <section id="new-book">
+            <h2>Publish Your Story</h2>
+            <input type="text" id="title" placeholder="Book Title">
+            <input type="text" id="author" placeholder="Author">
+            <textarea id="story" placeholder="Write your story..."></textarea>
+            <button id="publish">Publish</button>
+        </section>
+    </main>
+    
+    <script src="script.js"></script>
 </body>
 </html>
