@@ -1,0 +1,104 @@
+JS                                                                                                                                                                        
+
+// Initialize Application                                                                                                                                         
+LOAD homepage                                                                                          
+DISPLAY featured stories
+DISPLAY navigation menu (Home, Write, Profile, Search)
+
+// Fetch and Display Books
+FUNCTION fetchBooks()
+    CALL API to get book data
+    FOR EACH book in data
+        DISPLAY book title, author, likes, comments
+    END FOR
+END FUNCTION
+
+// Like a Book
+FUNCTION likeBook(bookID)
+    INCREMENT like count for bookID
+    UPDATE UI to show new like count
+END FUNCTION
+
+// Comment on a Book
+FUNCTION commentBook(bookID, userComment)
+    ADD userComment to book's comment section
+    UPDATE UI to show new comment
+END FUNCTION
+
+// Search Books
+FUNCTION searchBooks(keyword)
+    FILTER books based on keyword
+    DISPLAY matching books
+END FUNCTION
+
+// Write & Publish a New Book
+FUNCTION publishBook(title, content, author)
+    STORE book data in local storage (or API)
+    DISPLAY success message
+END FUNCTION
+
+// View User Profile
+FUNCTION viewProfile(userID)
+    DISPLAY user’s published books
+    ALLOW user to edit or delete books
+END FUNCTION
+
+// Event Listeners
+ON like button click -> CALL likeBook(bookID)
+ON comment submit -> CALL commentBook(bookID, userComment)
+ON search input -> CALL searchBooks(keyword)
+ON publish button click -> CALL publishBook(title, content, author)
+
+END
+
+
+// Initialize Application
+LOAD homepage
+DISPLAY featured stories
+DISPLAY navigation menu (Home, Write, Profile, Search)
+
+// Fetch and Display Books
+FUNCTION fetchBooks()
+    CALL API to get book data
+    FOR EACH book in data
+        DISPLAY book title, author, likes, comments
+    END FOR
+END FUNCTION
+
+// Like a Book
+FUNCTION likeBook(bookID)
+    INCREMENT like count for bookID
+    UPDATE UI to show new like count
+END FUNCTION
+
+// Comment on a Book
+FUNCTION commentBook(bookID, userComment)
+    ADD userComment to book's comment section
+    UPDATE UI to show new comment
+END FUNCTION
+
+// Search Books
+FUNCTION searchBooks(keyword)
+    FILTER books based on keyword
+    DISPLAY matching books
+END FUNCTION
+
+// Write & Publish a New Book
+FUNCTION publishBook(title, content, author)
+    STORE book data in local storage (or API)
+    DISPLAY success message
+END FUNCTION
+
+// View User Profile
+FUNCTION viewProfile(userID)
+    DISPLAY user’s published books
+    ALLOW user to edit or delete books
+END FUNCTION
+
+// Event Listeners
+ON like button click -> CALL likeBook(bookID)
+ON comment submit -> CALL commentBook(bookID, userComment)
+ON search input -> CALL searchBooks(keyword)
+ON publish button click -> CALL publishBook(title, content, author)
+
+END
