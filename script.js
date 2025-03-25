@@ -1,6 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const mainContainer = document.querySelector('.main-container');
-
+    let books = JSON.parse(localStorage.getItem('books')) || [
+        { id: 1, title: "The Lost Realm", content: "Once upon a time in a hidden kingdom...", likes: 0, comments: [] },
+        { id: 2, title: "The Forgotten Forest", content: "Deep within the woods, a secret lay hidden...", likes: 0, comments: [] },
+        { id: 3, title: "Echoes of the Past", content: "A mysterious voice whispered through the ages...", likes: 0, comments: [] }
+    ];
+    
     function updateMainContent(content) {
         mainContainer.innerHTML = '';
         mainContainer.appendChild(content);
@@ -12,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function requireLogin() {
         alert("You must be logged in to access this section.");
-        window.location.href = 'login';
+        updateMainContent(createLoginSection());
     }
 
     function createHomeSection() {
@@ -23,139 +28,139 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>Join the TaleNest community and explore a world of stories.</p>
             <button id="hero-btn">Get Started</button>
         `;
-        section.querySelector('#hero-btn').addEventListener('click', () => {
-            updateMainContent(createLoginSection()); // Redirect to login section
-        });
+        section.querySelector('#hero-btn').addEventListener('click', () => updateMainContent(createLoginSection()));
         return section;
     }
-    
+
     function createLibrarySection() {
-        if (!isLoggedIn()) {
-            requireLogin();
-            return;
-        }
+        if (!isLoggedIn()) return requireLogin();
 
         const section = document.createElement('section');
         section.id = 'library';
-        section.innerHTML = `
-            <h2>Library</h2>
-            <p>Browse through a vast collection of stories from various genres.</p>
-        `;
-        return section;
-    }
+        section.innerHTML = `<h2>Library</h2>`;
 
-    function createWriteSection() {
-        if (!isLoggedIn()) {
-            requireLogin();
-            return;
-        }
+        const bookContainer = document.createElement('div');
+        bookContainer.className = 'book-container';
 
-        const section = document.createElement('section');
-        section.id = 'write';
-        section.innerHTML = `
-            <h2>Write</h2>
-            <p>Unleash your creativity and share your stories with the world.</p>
-            <div class="publish-area">
-                <textarea id="story-content" placeholder="Start writing your story here..."></textarea>
-                <button id="publish-btn">Publish</button>
-            </div>
-        `;
-        section.querySelector('#publish-btn').addEventListener('click', () => {
-            const storyContent = section.querySelector('#story-content').value;
-            if (storyContent.trim()) {
-                alert('Your story has been published!');
-                section.querySelector('#story-content').value = '';
-            } else {
-                alert('Please write something before publishing.');
-            }
-        });
-        return section;
-    }
-
-    function createSearchSection() {
-        const section = document.createElement('section');
-        section.id = 'search';
-        section.innerHTML = `
-            <h2>Search</h2>
-            <p>Find your favorite stories or authors with ease.</p>
-        `;
-        return section;
-    }
-
-    function createProfileSection() {
-        if (!isLoggedIn()) {
-            requireLogin();
-            return;
-        }
-
-        const section = document.createElement('section');
-        section.id = 'profile';
-        section.innerHTML = `
-            <h2>Profile</h2>
-            <p>View your profile and manage your stories.</p>
-            <div class="profile-area">
-                <div class="profile-picture">
-                    <img src="path/to/profile-picture.jpg" alt="Profile Picture">
-                </div>
-                <div class="profile-details">
-                    <h3>Username</h3>
-                    <p>Email: user@example.com</p>
-                    <p>Stories Published: 10</p>
-                    <p>Followers: 200</p>
-                    <button id="logout">Logout</button>
-                </div>
-            </div>
-        `;
-        
-        section.querySelector("#logout").addEventListener("click", () => {
-            localStorage.removeItem("loggedInUser");
-            alert("Logged out successfully!");
-            window.location.href = "index.html";
+        books.forEach(book => {
+            const bookDiv = document.createElement('div');
+            bookDiv.className = 'book';
+            bookDiv.innerHTML = `
+                <h3>${book.title}</h3>
+                <button class="read-btn" data-id="${book.id}">Read</button>
+                <button class="edit-story-btn" data-id="${book.id}">Edit</button>
+                <button class="delete-btn" data-id="${book.id}">Delete</button>
+            `;
+            bookContainer.appendChild(bookDiv);
         });
 
-        return section;
-    }
-    function createLoginSection() {
-        const section = document.createElement('section');
-        section.id = 'login';
-        section.innerHTML = `
-            <h2>Login</h2>
-            <p>Access your account to explore and share stories.</p>
-            <form id="login-form">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit">Login</button>
-            </form>
-        `;
-        return section;
-    }
+        section.appendChild(bookContainer);
 
-    // Event Delegation for Login Form
-    document.addEventListener('submit', (event) => {
-        if (event.target.id === 'login-form') {
-            event.preventDefault();
-            const username = event.target.querySelector('#username').value;
-            const password = event.target.querySelector('#password').value;
-
-            if (username && password) {
-                localStorage.setItem('loggedInUser', username);
-                alert('Login successful!');
-                window.location.href = 'index.html';
-            } else {
-                alert('Please fill in all fields.');
+        section.addEventListener('click', (event) => {
+            const bookId = event.target.getAttribute('data-id');
+            if (event.target.classList.contains('read-btn')) {
+                updateMainContent(createBookView(bookId));
+            } else if (event.target.classList.contains('edit-story-btn')) {
+                updateMainContent(createEditStoryView(bookId));
+            } else if (event.target.classList.contains('delete-btn')) {
+                books = books.filter(b => b.id != bookId);
+                localStorage.setItem('books', JSON.stringify(books));
+                updateMainContent(createLibrarySection());
             }
-        }
-    });
+        });
 
-    // Event Listeners for Navigation
+        return section;
+    }
+
+    function createBookView(bookId) {
+        const book = books.find(b => b.id == bookId);
+        if (!book) return createLibrarySection();
+
+        const section = document.createElement('section');
+        section.id = 'book-view';
+        section.innerHTML = `
+            <h2>${book.title}</h2>
+            <p>${book.content}</p>
+            <button id="like-btn">Like (${book.likes})</button>
+            <div id="comments">
+                ${book.comments.map((c, index) => `
+                    <p>${c} 
+                        <button class='edit-comment' data-id='${book.id}' data-index='${index}'>Edit</button>
+                        <button class='delete-comment' data-id='${book.id}' data-index='${index}'>Delete</button>
+                    </p>`).join('')}
+            </div>
+            <input type="text" id="comment-input" placeholder="Add a comment...">
+            <button id="comment-btn">Comment</button>
+            <button id="go-back">Go Back</button>
+        `;
+
+        section.querySelector('#like-btn').addEventListener('click', () => {
+            book.likes++;
+            localStorage.setItem('books', JSON.stringify(books));
+            updateMainContent(createBookView(bookId));
+        });
+
+        section.querySelector('#comment-btn').addEventListener('click', () => {
+            const commentInput = section.querySelector('#comment-input').value;
+            if (commentInput.trim()) {
+                book.comments.push(commentInput);
+                localStorage.setItem('books', JSON.stringify(books));
+                updateMainContent(createBookView(bookId));
+            }
+        });
+
+        section.addEventListener('click', (event) => {
+            if (event.target.classList.contains('edit-comment')) {
+                const commentIndex = event.target.getAttribute('data-index');
+                const newComment = prompt("Edit your comment:", book.comments[commentIndex]);
+                if (newComment !== null) {
+                    book.comments[commentIndex] = newComment;
+                    localStorage.setItem('books', JSON.stringify(books));
+                    updateMainContent(createBookView(bookId));
+                }
+            } else if (event.target.classList.contains('delete-comment')) {
+                const commentIndex = event.target.getAttribute('data-index');
+                book.comments.splice(commentIndex, 1);
+                localStorage.setItem('books', JSON.stringify(books));
+                updateMainContent(createBookView(bookId));
+            } else if (event.target.id === 'go-back') {
+                updateMainContent(createLibrarySection());
+            }
+        });
+
+        return section;
+    }
+
+    function createEditStoryView(bookId) {
+        const book = books.find(b => b.id == bookId);
+        if (!book) return createLibrarySection();
+
+        const section = document.createElement('section');
+        section.innerHTML = `
+            <h2>Edit Story</h2>
+            <input type="text" id="edit-title" value="${book.title}">
+            <textarea id="edit-content">${book.content}</textarea>
+            <button id="save-edit">Save</button>
+            <button id="go-back">Go Back</button>
+        `;
+
+        section.querySelector('#save-edit').addEventListener('click', () => {
+            book.title = section.querySelector('#edit-title').value;
+            book.content = section.querySelector('#edit-content').value;
+            localStorage.setItem('books', JSON.stringify(books));
+            updateMainContent(createLibrarySection());
+        });
+
+        section.querySelector('#go-back').addEventListener('click', () => {
+            updateMainContent(createLibrarySection());
+        });
+
+        return section;
+    }
+
     document.getElementById('home').addEventListener('click', () => updateMainContent(createHomeSection()));
     document.getElementById('Library').addEventListener('click', () => updateMainContent(createLibrarySection()));
     document.getElementById('write').addEventListener('click', () => updateMainContent(createWriteSection()));
-    document.getElementById('search').addEventListener('click', () => updateMainContent(createSearchSection()));
-    document.getElementById('profile').addEventListener('click', () => updateMainContent(createProfileSection()));
 
-    // Load Home section by default
     updateMainContent(createHomeSection());
 });
