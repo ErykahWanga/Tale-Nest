@@ -1,0 +1,103 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "The Lost Realm",
+      "content": "In a world where magic slowly faded into obscurity, there lay a forgotten realm, hidden amidst the swirling mists of time and space. This realm, known as Eldoria, was once a bustling land of vibrant colors, creatures of myth, and ancient sorcery. Legends spoke of its uncanny beauty and the unbreakable bond its inhabitants shared with nature — a place where the trees whispered secrets and rivers sung melodies of times long past.\n\nEldoria was ruled by a wise sorceress, Amara, whose wisdom knew no bounds. As a protector of peace, she wielded remarkable power to guard her realm from darkness. However, as the ages passed, Eldoria was forgotten. With no one to remember its splendor, the magic of the realm began to wane, casting it into shadows.\n\nOne fateful eve, a curious young girl named Lila stumbled upon an ancient book in her grandmother’s attic. The book was adorned with symbols of the realm, and as she opened it, a soft glow enveloped her, revealing echoes of Eldoria’s past. Driven by the images of enchantment and hope, Lila decided to embark on a journey to find the lost realm.\n\nThrough rugged mountains and enchanted forests, Lila faced numerous challenges. She encountered mythical creatures: a fierce griffon, a cantankerous troll, and a wise old centaur, each guiding her with riddles and lessons. With every challenge, Lila’s heart grew stronger, imbued with the whispers of the lost magic.\n\nFinally, after many trials, Lila arrived at a shimmering portal said to lead to Eldoria. With a deep breath, she stepped through, and the realm materialized before her eyes — lush landscapes teeming with vibrant colors and creatures of every kind.\n\nYet there was one thing missing; the magic had been dormant for centuries. Lila realized that Eldoria's magic relied upon belief and memories. She decided to share stories of Eldoria with the world outside its confines, starting with her village. By igniting the flames of imagination and wonder, Lila would unearth the realm's spirit and restore its once-flourishing magic.\n\nThrough her adventures, Lila not only saved Eldoria but also learned the importance of storytelling — that every tale holds power and every story can breathe life into the forgotten.\n\nAs she returned to her village, the people began to believe once more, and Eldoria glowed brightly in the hearts of many, bridging the gap between realms.",
+      "likes": 10,
+      "comments": [
+        "Amazing story!",
+        "Loved the twist at the end.",
+        {
+          "text": ""
+        }
+      ],
+      "coverImage": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1339921830i/15709346.jpg"
+    },
+    {
+      "id": "2",
+      "title": "The Forgotten Forest",
+      "content": "Deep within the woods, a secret lay hidden, waiting patiently for the day it would be discovered. The trees whispered ancient tales, their gnarled roots embracing the earth like a guardian's embrace. Amelia, a young girl with an insatiable curiosity, often wandered into the forest’s embrace, but she had never uncovered its deepest mysteries until one fateful twilight.\n\nAs dusk fell, the air shimmered with an unusual energy. Drawn by an inexplicable force, Amelia ventured deeper than she ever had before. Suddenly, she stumbled upon a glimmering grove, where moonlight danced upon the surface of a still pond. In its reflection, she saw not just her image but the vibrant colors of a world beyond — a realm of fairies, elves, and fantastical beasts.\n\nAmelia's heart raced as she reached out to touch the water. In that instant, the reflections transformed, revealing visions of a lost tradition where humans and magical creatures lived in harmony. However, darkness had infiltrated this sanctuary, causing the bond between the worlds to fray.\n\nDetermined to mend the rift, Amelia sought the help of an eccentric old wizard, who told her of a powerful artifact — the Heart of the Forest. To restore balance, she would need to reclaim this artifact from the clutches of a greedy sorceress who had hidden it deep within her enchanted lair.\n\nWith the aid of woodland allies, a wise old owl and an agile fox, Amelia embarked on her quest. Along the way, she faced trials that tested her courage, compassion, and wits. Ultimately, she discovered that the bond between two worlds could be restored through understanding and cooperation, reigniting the ancient traditions that had faded with time.\n\nThrough her bravery, Amelia would not only save the Forgotten Forest but also forge a new alliance, reminding both worlds of the magic that lay in unity and love.",
+      "likes": 3,
+      "comments": [
+        "This gave me chills!",
+        "I want to know more."
+      ],
+      "coverImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSWPci2Qq6dd6GJ5DIU4V8kSbWTKaxdALrGw&s"
+    },
+    {
+      "id": "3",
+      "title": "Echoes of the Past",
+      "content": "A mysterious voice whispered through the ages, a melody that only a few could hear. In the heart of a small village, young Elias often found himself wandering the ancient ruins on the outskirts. Tales of the elders spoke of old spirits trapped between worlds, waiting for someone to unravel their stories. Ever curious, Elias listened to the whispers carried by the wind, each note intertwining with a memory of days long gone.\n\nOne particular evening, while tracing his fingers along the weathered stone, he felt a surge of power engulf him. In a flash, he was transported to another time — a vibrant market bustling with life, where laughter and music echoed through the streets. He met an enigmatic girl named Liora, whose laughter was like sunshine, and together they explored the wonders of her world.\n\nBut as the sun set, Elias felt the connection beginning to fade, the world around him blurring. Liora revealed that the spirits of the past were trapped in a timeless loop, cursed by a betrayal that had shattered the bonds of trust and love. If Elias hoped to return and save Liora, he must uncover the truth behind the betrayal and confront the dark forces that had sealed their fate.\n\nGuided by the whispers of ancient spirits, Elias navigated the labyrinth of memories, piecing together the fragments of history. Each encounter with Liora drew him closer to the truth, but also deeper into danger. As the final confrontation loomed, Elias had to make a choice — to save Liora or to return to his own time, forever leaving the past behind.\n\nIn unraveling the mysteries of the echoes, he learned that the past and present are forever intertwined, and sometimes, the echoes of yesterday can shape the future in ways one might never expect.",
+      "likes": 8,
+      "comments": [
+        "So hauntingly beautiful!",
+        "Best one so far."
+      ],
+      "coverImage": "https://mysteryinhistory.com/wp-content/uploads/Echo-The-Nymph-In-A-Mystical-Forest-Setting.webp"
+    },
+    {
+      "id": "4",
+      "title": "The Crystal Crown",
+      "content": "In the kingdom of Arion, power rested not only in the hands of its king but also in a legendary artifact known as the Crystal Crown. Said to grant unparalleled strength and wisdom, it had been lost for centuries, its whereabouts a mystery. When young Prince Edward stumbled upon a fragment of a map hidden in his late father's journal, he felt an unmistakable calling.\n\nDetermined to reclaim the crown, Edward assembled a loyal band of companions: a fierce warrior named Thalia, a clever rogue named Jace, and a wise healer known as Elara. Together, they set out on a perilous journey across treacherous mountains, enchanted rivers, and cursed valleys.\n\nAs they traveled, the group faced fierce beasts, treacherous terrain, and challenges that tested their courage and friendship. Each trial revealed secrets about Edward’s lineage and the deep magic that bound their fates together. Along the way, they uncovered clues about the crown's power and the promise it held for Arion.\n\nHowever, a rival faction, led by the dark sorceress Lady Seraphine, sought the crown for their own malevolent purposes. Edward and his friends would need to confront not only the external threats but also their own doubts and fears. In the final battle, as they reached the sacred temple housing the Crystal Crown, they realized that the true power of the crown lay not merely in its magic but in the bonds forged through loyalty, sacrifice, and love.\n\nIn claiming the crown, Edward would not only save his kingdom but also learn valuable lessons about leadership, trust, and the essence of true power.",
+      "likes": 5,
+      "comments": [
+        "This sounds epic!",
+        "I love a good adventure story!"
+      ],
+      "coverImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrB20_D1D9CHSO01LKaEDBX_hrb-vsryQePA&s"
+    },
+    {
+      "id": "5",
+      "title": "The Time Keeper's Daughter",
+      "content": "In a small village where time flowed differently than in the world beyond, there lived a guardian known as the Time Keeper. He was the protector of the ancient clock tower that governed the harmony of time. His daughter, Clara, grew up listening to tales of time travels, magical realms, and the responsibility that came with their legacy.\n\nOne day, Clara discovered a secret compartment within the clock tower containing a beautifully crafted hourglass. Upon touching it, she was transported back to a crucial moment in the village's past, where she witnessed the Time Keeper battling a shadow that threatened to unravel time itself.\n\nRealizing that the hours of her own time were slipping away and the delicate balance of the present was at risk, Clara needed to harness her inherited powers. Guided by the whispers of her father’s spirit, she traveled back and forth through different timelines, seeking a way to mend the fractures in time.\n\nBut dark forces were at play; a malevolent entity sought to control the hourglass for its sinister purposes. Clara forged unexpected alliances with historical figures drawn from the threads of time, learning invaluable lessons about courage, sacrifice, and the true meaning of moments.\n\nAs she faced the ultimate showdown with the entity, Clara realized that time is not just to be measured, but to be treasured. It was through understanding the significance of each moment that she would ultimately restore balance to her world and follow in her father's footsteps as the true Time Keeper.",
+      "likes": 5,
+      "comments": [
+        "What a unique concept!",
+        "Clara sounds like a strong protagonist!"
+      ],
+      "coverImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1v8_KYs0gJrSAJzZ3SyiVTWe40fPjjbMotYLpnrYGN8ncIghhDhoKPEsiGUgh7hL560E&usqp=CAU"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "Alice",
+      "password": "password123",
+      "likedBooks": [
+        1,
+        3
+      ],
+      "publishedBooks": [
+        1
+      ]
+    },
+    {
+      "id": "2",
+      "username": "jane_smith",
+      "password": "securepass",
+      "likedBooks": [
+        2
+      ],
+      "publishedBooks": [
+        2,
+        3
+      ]
+    }
+  ],
+  "userActivity": [
+    {
+      "userId": 1,
+      "bookId": 1,
+      "action": "liked",
+      "id": "a1b9"
+    },
+    {
+      "userId": 2,
+      "bookId": 2,
+      "action": "commented",
+      "comment": "I want to know more.",
+      "id": "01c5"
+    }
+  ]
+}

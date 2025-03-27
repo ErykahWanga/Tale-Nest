@@ -1,166 +1,218 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const mainContainer = document.querySelector('.main-container');
-    let books = JSON.parse(localStorage.getItem('books')) || [
-        { id: 1, title: "The Lost Realm", content: "Once upon a time in a hidden kingdom...", likes: 0, comments: [] },
-        { id: 2, title: "The Forgotten Forest", content: "Deep within the woods, a secret lay hidden...", likes: 0, comments: [] },
-        { id: 3, title: "Echoes of the Past", content: "A mysterious voice whispered through the ages...", likes: 0, comments: [] }
-    ];
-    
-    function updateMainContent(content) {
-        mainContainer.innerHTML = '';
-        mainContainer.appendChild(content);
+let books = []; // Array to store books
+let userLikes = [];
+let userComments = [];
+let userPublishedBooks = [];
+
+
+function showSection(section) {
+    document.getElementById('book-list').style.display = 'none';
+    document.getElementById('publish-new-book').style.display = 'none';
+    document.getElementById('profile-section').style.display = 'none';
+
+    if (section === 'library') {
+        document.getElementById('book-list').style.display = 'block';
+        fetchBooks();
+    } else if (section === 'write') {
+        document.getElementById('publish-new-book').style.display = 'block';
+    } else if (section === 'profile') {
+        document.getElementById('profile-section').style.display = 'block';
+        displayProfile();
     }
+}ync
 
-    function isLoggedIn() {
-        return localStorage.getItem("loggedInUser") !== null;
+
+async function fetchBooks() {
+    try {
+        const response = await fetch('http://localhost:3000/books'); // Fetch from JSON Server
+        const data = await response.json();
+        books = data; // Store in global books array
+        displayBooks(books);
+    } catch (error) {
+        console.error('Error fetching book data:', error);
     }
+}
 
-    function requireLogin() {
-        alert("You must be logged in to access this section.");
-        updateMainContent(createLoginSection());
-    }
-
-    function createHomeSection() {
-        const section = document.createElement('section');
-        section.id = 'home';
-        section.innerHTML = `
-            <h2>Read, Write, Share</h2>
-            <p>Join the TaleNest community and explore a world of stories.</p>
-            <button id="hero-btn">Get Started</button>
-        `;
-        section.querySelector('#hero-btn').addEventListener('click', () => updateMainContent(createLoginSection()));
-        return section;
-    }
-
-    function createLibrarySection() {
-        if (!isLoggedIn()) return requireLogin();
-
-        const section = document.createElement('section');
-        section.id = 'library';
-        section.innerHTML = `<h2>Library</h2>`;
-
-        const bookContainer = document.createElement('div');
-        bookContainer.className = 'book-container';
-
-        books.forEach(book => {
-            const bookDiv = document.createElement('div');
-            bookDiv.className = 'book';
-            bookDiv.innerHTML = `
-                <h3>${book.title}</h3>
-                <button class="read-btn" data-id="${book.id}">Read</button>
-                <button class="edit-story-btn" data-id="${book.id}">Edit</button>
-                <button class="delete-btn" data-id="${book.id}">Delete</button>
-            `;
-            bookContainer.appendChild(bookDiv);
-        });
-
-        section.appendChild(bookContainer);
-
-        section.addEventListener('click', (event) => {
-            const bookId = event.target.getAttribute('data-id');
-            if (event.target.classList.contains('read-btn')) {
-                updateMainContent(createBookView(bookId));
-            } else if (event.target.classList.contains('edit-story-btn')) {
-                updateMainContent(createEditStoryView(bookId));
-            } else if (event.target.classList.contains('delete-btn')) {
-                books = books.filter(b => b.id != bookId);
-                localStorage.setItem('books', JSON.stringify(books));
-                updateMainContent(createLibrarySection());
-            }
-        });
-
-        return section;
-    }
-
-    function createBookView(bookId) {
-        const book = books.find(b => b.id == bookId);
-        if (!book) return createLibrarySection();
-
-        const section = document.createElement('section');
-        section.id = 'book-view';
-        section.innerHTML = `
-            <h2>${book.title}</h2>
+//display books
+function displayBooks(bookArray) {
+    const bookList = document.getElementById('book-list'); // Get the book list element
+    bookList.innerHTML = '';
+    bookArray.forEach(book => { // Loop through the books array
+        const bookDiv = document.createElement('div');
+        bookDiv.classList.add('book');
+        bookDiv.innerHTML = `
+            <h3>${book.title}</h3>
             <p>${book.content}</p>
-            <button id="like-btn">Like (${book.likes})</button>
-            <div id="comments">
-                ${book.comments.map((c, index) => `
-                    <p>${c} 
-                        <button class='edit-comment' data-id='${book.id}' data-index='${index}'>Edit</button>
-                        <button class='delete-comment' data-id='${book.id}' data-index='${index}'>Delete</button>
-                    </p>`).join('')}
+            <p>Likes: <span id="likes-${book.id}">${book.likes}</span> <span class="like-button" onclick="likeBook(${book.id})">Like</span></p>
+            <button onclick="editBook(${book.id})">Edit Book</button>
+            <button onclick="deleteBook(${book.id})">Delete Book</button>
+            <div class="comments">
+                <strong>Comments:</strong>
+                <ul id="comments-${book.id}">
+                    ${book.comments.map((comment, index) => `
+                        <li>
+                            ${comment.text}
+                            <button onclick="editComment(${book.id}, ${index})">Edit</button>
+                        </li>`).join('')}
+                </ul>
+                <input type="text" id="comment-input-${book.id}" placeholder="Add a comment...">
+                <button onclick="commentOnBook(${book.id})">Comment</button>
             </div>
-            <input type="text" id="comment-input" placeholder="Add a comment...">
-            <button id="comment-btn">Comment</button>
-            <button id="go-back">Go Back</button>
         `;
+        bookList.appendChild(bookDiv);
+    });
+}
 
-        section.querySelector('#like-btn').addEventListener('click', () => {
-            book.likes++;
-            localStorage.setItem('books', JSON.stringify(books));
-            updateMainContent(createBookView(bookId));
-        });
 
-        section.querySelector('#comment-btn').addEventListener('click', () => {
-            const commentInput = section.querySelector('#comment-input').value;
-            if (commentInput.trim()) {
-                book.comments.push(commentInput);
-                localStorage.setItem('books', JSON.stringify(books));
-                updateMainContent(createBookView(bookId));
-            }
-        });
+async function likeBook(bookId) {
+    const book = books.find(b => b.id == bookId); // Loose comparison to handle string/number mismatch
+    if (book && !userLikes.includes(bookId)) {
+        book.likes += 1;
+        userLikes.push(bookId); // Track user likes
 
-        section.addEventListener('click', (event) => {
-            if (event.target.classList.contains('edit-comment')) {
-                const commentIndex = event.target.getAttribute('data-index');
-                const newComment = prompt("Edit your comment:", book.comments[commentIndex]);
-                if (newComment !== null) {
-                    book.comments[commentIndex] = newComment;
-                    localStorage.setItem('books', JSON.stringify(books));
-                    updateMainContent(createBookView(bookId));
-                }
-            } else if (event.target.classList.contains('delete-comment')) {
-                const commentIndex = event.target.getAttribute('data-index');
-                book.comments.splice(commentIndex, 1);
-                localStorage.setItem('books', JSON.stringify(books));
-                updateMainContent(createBookView(bookId));
-            } else if (event.target.id === 'go-back') {
-                updateMainContent(createLibrarySection());
-            }
-        });
+        try {
+            await fetch(`http://localhost:3000/books/${bookId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ likes: book.likes }),
+            });
 
-        return section;
+            document.getElementById(`likes-${bookId}`).innerText = book.likes;
+        } catch (error) {
+            console.error('Error liking book:', error);
+        }
+
+        // UPDATE PROFILE SECTION
+        const likedBooksList = document.getElementById('liked-books-list');
+        const listItem = document.createElement('li');
+        listItem.textContent = book.title;
+        likedBooksList.appendChild(listItem);
     }
+}
 
-    function createEditStoryView(bookId) {
-        const book = books.find(b => b.id == bookId);
-        if (!book) return createLibrarySection();
 
-        const section = document.createElement('section');
-        section.innerHTML = `
-            <h2>Edit Story</h2>
-            <input type="text" id="edit-title" value="${book.title}">
-            <textarea id="edit-content">${book.content}</textarea>
-            <button id="save-edit">Save</button>
-            <button id="go-back">Go Back</button>
-        `;
-
-        section.querySelector('#save-edit').addEventListener('click', () => {
-            book.title = section.querySelector('#edit-title').value;
-            book.content = section.querySelector('#edit-content').value;
-            localStorage.setItem('books', JSON.stringify(books));
-            updateMainContent(createLibrarySection());
-        });
-
-        section.querySelector('#go-back').addEventListener('click', () => {
-            updateMainContent(createLibrarySection());
-        });
-
-        return section;
+// Function to comment on a book
+async function commentOnBook(bookId) {
+    const commentInput = document.getElementById(`comment-input-${bookId}`);
+    const commentText = commentInput.value.trim();
+    if (commentText) {
+        const book = books.find(b => b.id === String(bookId));
+        if (book) {
+            book.comments.push({ text: commentText });
+            userComments.push({ bookId: bookId, text: commentText }); // Track user's comments
+            displayBooks(books);
+            displayProfile(); // Update profile section with new comment
+            commentInput.value = '';
+        }
     }
+}
 
-    document.getElementById('home').addEventListener('click', () => updateMainContent(createHomeSection()));
-    document.getElementById('Library').addEventListener('click', () => updateMainContent(createLibrarySection()));
-    document.getElementById('write').addEventListener('click', () => updateMainContent(createWriteSection()));
+// display user profile
+function displayProfile() {
+    const likedBooksList = document.getElementById('liked-books-list');
+    const yourCommentsList = document.getElementById('your-comments-list');
+    const yourPublishedBooksList = document.getElementById('your-published-books-list');
 
-    updateMainContent(createHomeSection());
-});
+    likedBooksList.innerHTML = '';
+    yourCommentsList.innerHTML = '';
+    yourPublishedBooksList.innerHTML = '';
+
+    // Display liked books
+    userLikes.forEach(bookId => {
+        const book = books.find(b => b.id === String(bookId));
+        if(book) {
+            const listItem = document.createElement('li');
+            listItem.textContent = book.title;
+            likedBooksList.appendChild(listItem);
+        }
+    });
+
+    // Display user's comments
+    userComments.forEach(comment => {
+        const book = books.find(b => b.id === String(comment.bookId));
+        if (book) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `Comment on "${book.title}": ${comment.text}`;
+            yourCommentsList.appendChild(listItem);
+        }
+    });
+
+    // Display user's published books
+    userPublishedBooks.forEach(book => {
+        const listItem = document.createElement('li');
+        listItem.textContent = book.title;
+        yourPublishedBooksList.appendChild(listItem);
+    });
+}
+
+// Function to edit a book
+function editBook(bookId) {
+    const book = books.find(b => b.id === String(bookId));
+    if (book) {
+        const newTitle = prompt("Edit Book Title:", book.title);
+        const newContent = prompt("Edit Book Content:", book.content);
+        if (newTitle !== null && newContent !== null) {
+            book.title = newTitle;
+            book.content = newContent;
+            displayBooks(books);
+        }
+    }
+}
+
+// Function to edit a comment
+function editComment(bookId, commentIndex) {
+    const book = books.find(b => b.id === String(bookId));
+    if (book && book.comments[commentIndex]) {
+        const newComment = prompt("Edit your comment:", book.comments[commentIndex].text);
+        if (newComment !== null) {
+            book.comments[commentIndex].text = newComment;
+            displayBooks(books);
+            displayProfile(); // Update profile section with edited comment
+        }
+    }
+}
+
+// Function to delete a book
+function deleteBook(bookId) {
+    books = books.filter(b => b.id !== String(bookId));
+    displayBooks(books);
+}
+
+// publish a new book
+function publishBook() {
+    const titleInput = document.getElementById('new-book-title');
+    const contentInput = document.getElementById('new-book-content');
+
+    const newTitle = titleInput.value.trim();
+    const newContent = contentInput.value.trim();
+
+    if (newTitle && newContent) {
+        const newBook = {
+            id: String(books.length + 1),
+            title: newTitle,
+            content: newContent,
+            likes: 0,
+            comments: []
+        };
+        books.push(newBook);
+        userPublishedBooks.push(newBook); // Track the user's published books
+        displayBooks(books);
+        displayProfile(); // Update the profile section immediately
+
+        titleInput.value = '';
+        contentInput.value = '';
+    }
+}
+
+// Function to search for books
+function searchBooks() {
+    const query = document.getElementById('search').value.toLowerCase();
+    const filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(query)
+    );
+    displayBooks(filteredBooks);
+}
+
+// Show library section on initial load
+showSection('library');
+// Fetch books on page load
+fetchBooks();   
