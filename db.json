@@ -72,32 +72,4 @@
         1
       ]
     },
-    {
-      "id": "2",
-      "username": "jane_smith",
-      "password": "securepass",
-      "likedBooks": [
-        2
-      ],
-      "publishedBooks": [
-        2,
-        3
-      ]
-    }
-  ],
-  "userActivity": [
-    {
-      "userId": 1,
-      "bookId": 1,
-      "action": "liked",
-      "id": "a1b9"
-    },
-    {
-      "userId": 2,
-      "bookId": 2,
-      "action": "commented",
-      "comment": "I want to know more.",
-      "id": "01c5"
-    }
-  ]
-}
+    
