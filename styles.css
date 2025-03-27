@@ -1,0 +1,191 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+     background-image: url('https://files.oaiusercontent.com/file-D8ixcQT21ZnXSxVJt26T3m?se=2025-03-26T15%3A06%3A59Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De852be6b-7afa-4fcb-810b-4e0942bf40cc.webp&sig=TTLIb8t2sC29haTUHWdbvw821tTY4jYU6UYdft%2B1kN8%3D'); */ /* Uncomment and provide a valid URL if needed */
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+    color: #333;
+}
+
+
+#navbar {
+    background: #333; 
+    padding: 10px;
+}
+
+#navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex; 
+    justify-content: center; 
+}
+
+#navbar li {
+    margin-right: 20px; 
+}
+
+#navbar a {
+    color: white; 
+    text-decoration: none;
+}
+
+#navbar a:hover {
+    text-decoration: underline; 
+}
+
+
+#search {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+#book-list {
+    margin-top: 20px;
+}
+
+.book {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+} 
+
+.book-cover {
+    max-width: 100px;
+    display: block;
+}
+
+.book h3 {
+    margin: 0 0 10px 0;
+}
+
+.comments {
+    margin-top: 10px;
+}
+
+#publish-new-book {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fefefe;
+}
+
+#publish-new-book input[type="text"],
+#publish-new-book textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#publish-new-book button {
+    background-color: #5bc0de;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#publish-new-book button:hover {
+    background-color: #31b0d5;
+}
+
+
+#profile-section {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fefefe;
+}
+
+
+.comments input {
+    width: calc(100% - 82px); 
+    padding: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.comments button {
+    background-color: #5bc0de;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comments button:hover {
+    background-color: #31b0d5;
+}
+
+
+@media (max-width: 600px) {
+    #navbar ul {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    #navbar li {
+        margin-bottom: 10px; /* Margin for stacked items */
+        margin-right: 0; /* Reset horizontal margin */
+    }
+
+    #publish-new-book input[type="text"],
+    #publish-new-book textarea {
+        width: calc(100% - 14px);
+    }
+
+    .book {
+        margin-top: 10px;
+    }
+} 
+img.book-cover {
+    max-width: 200px; /* Set a max width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensures images don't have inline spacing */
+    margin: 10px auto; /* Center the image within its container */
+}  
+
+.like-button {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+} 
+#signup-section, #login-section, #book-list, #publish-new-book, #profile-section, #book-detail {
+    display: none;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
