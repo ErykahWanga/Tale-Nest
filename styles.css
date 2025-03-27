@@ -4,7 +4,7 @@ body {
     background-color: #f4f4f9;
     margin: 0;
     padding: 20px;
-     background-image: url('https://files.oaiusercontent.com/file-D8ixcQT21ZnXSxVJt26T3m?se=2025-03-26T15%3A06%3A59Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De852be6b-7afa-4fcb-810b-4e0942bf40cc.webp&sig=TTLIb8t2sC29haTUHWdbvw821tTY4jYU6UYdft%2B1kN8%3D'); */ /* Uncomment and provide a valid URL if needed */
+    background-image: url('https://example.com/valid-image.webp');
 }
 
 .container {
@@ -182,6 +182,7 @@ img.book-cover {
     color: blue;
     text-decoration: underline;
 } 
+
 #signup-section, #login-section, #book-list, #publish-new-book, #profile-section, #book-detail {
     display: none;
     background: #fff;

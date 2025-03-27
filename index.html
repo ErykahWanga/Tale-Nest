@@ -3,65 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Management System</title>
+    <title>TaleNest</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav>
-        <button onclick="showSection('library')">Library</button>
-        <button onclick="showSection('write')">Write New Book</button>
-        <button onclick="showSection('profile')">Profile</button>
-        <button onclick="showSection('login')">Login</button>
-        <button onclick="showSection('signup')">Sign Up</button> <!-- Added Sign Up button -->
-    </nav>
+    <header>
+        <h1>TaleNest</h1>
+        <nav>
+            <button onclick="showSection('login')">Login</button>
+            <button onclick="showSection('signup')">Sign Up</button>
+            <button onclick="showSection('library')">Library</button>
+            <button onclick="showSection('write')">Write</button>
+            <button onclick="showSection('profile')">Profile</button>
+        </nav>
+    </header>
 
-    <div id="signup-section">
-        <h2>Sign Up</h2>
-        <input type="text" id="signup-username" placeholder="Username">
-        <input type="password" id="signup-password" placeholder="Password">
-        <button onclick="signup()">Sign Up</button>
-        <div id="signup-message"></div>
-    </div>
+    <main>
+        <!-- Login Section -->
+        <section id="login-section" style="display: none;">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <p id="login-message"></p>
+        </section>
 
-    <div id="login-section">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <div id="login-message"></div>
-    </div>
+        <!-- Signup Section -->
+        <section id="signup-section" style="display: none;">
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-username" placeholder="Username">
+            <input type="password" id="signup-password" placeholder="Password">
+            <button onclick="signup()">Sign Up</button>
+            <p id="signup-message"></p>
+        </section>
 
-    <div id="book-list">
-        <h2>Book List</h2>
-        <!-- Books will be dynamically loaded here -->
-    </div>
+        <!-- Library Section -->
+        <section id="book-list" style="display: none;">
+            <h2>Library</h2>
+            <input type="text" id="search" placeholder="Search books..." oninput="searchBooks()">
+            <div id="books-container"></div>
+        </section>
 
-    <div id="publish-new-book">
-        <h2>Publish a New Book</h2>
-        <input type="text" id="new-book-title" placeholder="Book Title">
-        <textarea id="new-book-content" placeholder="Book Content" rows="4"></textarea>
-        <button onclick="publishBook()">Publish Book</button>
-    </div>
+        <!-- Publish New Book -->
+        <section id="publish-new-book" style="display: none;">
+            <h2>Write a New Book</h2>
+            <input type="text" id="new-book-title" placeholder="Book Title">
+            <textarea id="new-book-content" placeholder="Book Content"></textarea>
+            <button onclick="publishBook()">Publish</button>
+        </section>
 
-    <div id="profile-section">
-        <h2>Your Profile</h2>
-        <h3>Liked Books:</h3>
-        <ul id="liked-books-list"></ul>
-        <h3>Your Comments:</h3>
-        <ul id="your-comments-list"></ul>
-        <h3>Your Published Books:</h3>
-        <ul id="your-published-books-list"></ul>
-    </div>
+        <!-- Profile Section -->
+        <section id="profile-section" style="display: none;">
+            <h2>Your Profile</h2>
+            <h3>Liked Books</h3>
+            <ul id="liked-books-list"></ul>
+            <h3>Your Comments</h3>
+            <ul id="your-comments-list"></ul>
+            <h3>Your Published Books</h3>
+            <ul id="your-published-books-list"></ul>
+        </section>
 
-    <div id="book-detail">
-        <h2>Book Detail</h2>
-        <!-- Detailed view of the selected book will be displayed here -->
-    </div>
+        <!-- Book Detail Section -->
+        <section id="book-detail" style="display: none;"></section>
+    </main>
 
-    <div>
-        <input type="text" id="search" placeholder="Search for books..." oninput="searchBooks()">
-    </div>
-
-    <script src="script.js"></script> <!-- Link to the JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
