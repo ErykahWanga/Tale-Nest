@@ -33,8 +33,7 @@ function displayBooks(books) {
                alt="Book Cover" 
                class="book-cover" 
                width="250" height="200"
-               onerror="this.src='https://via.placeholder.com/150';"> 
-
+               
           <h3 contenteditable="true" onblur="editBook('${book.id}', 'title', this.innerText)">${book.title}</h3>
           <button onclick="editBookPrompt('${book.id}')">Edit Book ✏️</button>
 
