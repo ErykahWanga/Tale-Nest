@@ -19,36 +19,94 @@ function fetchBooks() {
 }
 
 function displayBooks(books) {
-    const container = document.getElementById("books-container");
-    container.innerHTML = "";
+  const container = document.getElementById("books-container");
+  container.innerHTML = "";
 
-    books.forEach(book => {
-        const bookElement = document.createElement("div");
-        bookElement.classList.add("book");
+  books.forEach(book => {
+      const bookElement = document.createElement("div");
+      bookElement.classList.add("book");
 
-        const shortContent = book.content.length > 100 ? book.content.substring(0, 100) + "..." : book.content;
+      const shortContent = book.content.length > 100 ? book.content.substring(0, 100) + "..." : book.content;
 
-        bookElement.innerHTML = `
-            <img src="${book.cover}" 
-                 alt="Book Cover" 
-                 class="book-cover" 
-                 onerror="this.src='https://via.placeholder.com/150';"> 
-            <h3 contenteditable="true" onblur="editBook('${book.id}', 'title', this.innerText)">${book.title}</h3>
-            <p id="content-${book.id}" data-full="${book.content}">${shortContent}</p>
-            <button id="read-btn-${book.id}" onclick="toggleReadMore('${book.id}')">Read More 📖</button>
-            <button onclick="likeBook('${book.id}')">Like ❤️ <span id="like-${book.id}">${book.likes || 0}</span></button>
-            <button onclick="deleteBook('${book.id}')">Delete ❌</button>
-            <div class="comments">
-                <h4>Comments</h4>
-                <div id="comments-${book.id}">${book.comments.map(c => `<p>${c}</p>`).join("")}</div>
-                <input type="text" id="commentInput-${book.id}" placeholder="Write a comment">
-                <button onclick="addComment('${book.id}')">Comment</button>
-            </div>
-        `;
-        container.appendChild(bookElement);
-    });
+      bookElement.innerHTML = `
+          <img src="${book.cover}" 
+               alt="Book Cover" 
+               class="book-cover" 
+               width="250" height="200"
+               onerror="this.src='https://via.placeholder.com/150';"> 
+
+          <h3 contenteditable="true" onblur="editBook('${book.id}', 'title', this.innerText)">${book.title}</h3>
+          <button onclick="editBookPrompt('${book.id}')">Edit Book ✏️</button>
+
+          <p id="content-${book.id}" data-full="${book.content}">${shortContent}</p>
+          <button id="read-btn-${book.id}" onclick="toggleReadMore('${book.id}')">Read More 📖</button>
+          <button onclick="likeBook('${book.id}')">Like ❤️ <span id="like-${book.id}">${book.likes || 0}</span></button>
+          <button onclick="deleteBook('${book.id}')">Delete ❌</button>
+
+          <div class="comments">
+              <h4>Comments</h4>
+              <div id="comments-${book.id}">
+                  ${book.comments.map((c, index) => `
+                      <p id="comment-${book.id}-${index}">
+                          ${c} 
+                          <button onclick="editComment('${book.id}', ${index})">Edit ✏️</button>
+                      </p>
+                  `).join("")}
+              </div>
+              <input type="text" id="commentInput-${book.id}" placeholder="Write a comment">
+              <button onclick="addComment('${book.id}')">Comment</button>
+          </div>
+      `;
+      container.appendChild(bookElement);
+  });
 }
 
+// Function to edit book with a prompt
+function editBookPrompt(bookId) {
+  const newTitle = prompt("Enter new book title:");
+  const newContent = prompt("Enter new book content:");
+  const newCover = prompt("Enter new cover image URL:");
+
+  if (newTitle || newContent || newCover) {
+      fetch(`${API_URL}/${bookId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+              ...(newTitle && { title: newTitle }),
+              ...(newContent && { content: newContent }),
+              ...(newCover && { cover: newCover })
+          })
+      })
+      .then(() => {
+          fetchBooks();
+          logActivity("Edited a book.");
+      })
+      .catch(err => console.error("Error editing book:", err));
+  }
+}
+
+// Function to edit comments
+function editComment(bookId, commentIndex) {
+  const newComment = prompt("Enter your updated comment:");
+  if (!newComment) return;
+
+  fetch(`${API_URL}/${bookId}`)
+      .then(res => res.json())
+      .then(book => {
+          book.comments[commentIndex] = newComment;
+
+          return fetch(`${API_URL}/${bookId}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ comments: book.comments })
+          });
+      })
+      .then(() => {
+          fetchBooks();
+          logActivity("Edited a comment.");
+      })
+      .catch(err => console.error("Error editing comment:", err));
+}
 
 function publishBook() {
     const title = document.getElementById("bookTitle").value;
@@ -197,3 +255,4 @@ function showSection(sectionId) {
 
     document.getElementById(sectionId).classList.remove("hidden");
 }
+
