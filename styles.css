@@ -1,67 +1,151 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #f7f7f7;
-    background-image: url(https://i.gifer.com/7MKB.gif);
-
+    background: #f7f7f7 url(https://i.gifer.com/7MKB.gif) center/cover no-repeat;
 }
 
+/* Navbar */
 nav {
-    background: #333;
+    background: #222;
     color: white;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 15px;
+    padding: 15px 5%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
     list-style: none;
     display: flex;
     gap: 20px;
-}
-
-nav ul li {
-    display: inline;
+    padding: 0;
+    margin: 0;
 }
 
 nav ul li a {
     color: white;
     text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
 }
 
+nav ul li a:hover {
+    color: #f39c12;
+}
+
+/* Sections */
 section {
-    padding: 20px;
+    padding: 40px 5%;
 }
 
 .hidden {
     display: none;
 }
 
+/* Books Container */
 #books-container {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
+    justify-content: center;
 }
 
+/* Book Cards */
 .book {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    width: 250px;
+    background: rgba(0, 0, 0, 0.7);;
+    color: aliceblue;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    text-align: center;
 }
 
+.book:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Book Cover */
+.book-cover {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Buttons */
 .book button {
     background: #007BFF;
     color: white;
     border: none;
-    padding: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.book button:hover {
+    background: #0056b3;
+}
+
+/* Like and Delete Buttons */
+.book button:nth-child(4) {
+    background: #ff4757;
+}
+
+.book button:nth-child(4):hover {
+    background: #e84118;
+}
+
+/* Comments Section */
+.comments {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.comments h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.comments input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.comments button {
+    background: #28a745;
     margin-top: 5px;
 }
+
+.comments button:hover {
+    background: #218838;
+}
+
+/* Logo */
 .logo {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

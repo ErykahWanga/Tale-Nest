@@ -35,12 +35,12 @@ function displayBooks(books) {
                width="250" height="200"
                
           <h3 contenteditable="true" onblur="editBook('${book.id}', 'title', this.innerText)">${book.title}</h3>
-          <button onclick="editBookPrompt('${book.id}')">Edit Book ✏️</button>
+          <button onclick="editBookPrompt('${book.id}')">Edit Book </button>
 
           <p id="content-${book.id}" data-full="${book.content}">${shortContent}</p>
-          <button id="read-btn-${book.id}" onclick="toggleReadMore('${book.id}')">Read More 📖</button>
-          <button onclick="likeBook('${book.id}')">Like ❤️ <span id="like-${book.id}">${book.likes || 0}</span></button>
-          <button onclick="deleteBook('${book.id}')">Delete ❌</button>
+          <button id="read-btn-${book.id}" onclick="toggleReadMore('${book.id}')">Read More </button>
+          <button onclick="likeBook('${book.id}')">Like  <span id="like-${book.id}">${book.likes || 0}</span></button>
+          <button onclick="deleteBook('${book.id}')">Delete </button>
 
           <div class="comments">
               <h4>Comments</h4>
@@ -212,10 +212,10 @@ function toggleReadMore(bookId) {
 
     if (contentElement.innerText.includes("...")) {
         contentElement.innerText = fullContent;
-        readBtn.innerText = "Show Less ⬆️";
+        readBtn.innerText = "Show Less ";
     } else {
         contentElement.innerText = fullContent.substring(0, 100) + "...";
-        readBtn.innerText = "Read More 📖";
+        readBtn.innerText = "Read More ";
     }
 }
 
