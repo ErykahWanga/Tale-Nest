@@ -1,359 +1,199 @@
-// Variable declarations
-let books = [];
-let userLikes = [];
-let userComments = [];
-let userPublishedBooks = [];
+const API_URL = "https://tale-nest-mpjk.vercel.app/books";
 
-// Show specified section
-function showSection(section) {
-  const sections = ['book-list', 'publish-new-book', 'profile-section', 'book-detail'];
+// User activity log
+let userActivity = [];
 
-  // Hide all sections
-  sections.forEach(id => {
-    let element = document.getElementById(id);
-    if (element) {
-      element.style.display = 'none';
-    } else {
-      console.error(`Element with ID '${id}' not found`);
+// Fetch and display books on page load
+document.addEventListener("DOMContentLoaded", () => {
+    fetchBooks();
+    loadUserActivity();
+});
+
+function fetchBooks() {
+    fetch(API_URL)
+        .then(res => res.json())
+        .then(books => {
+            displayBooks(books);
+        })
+        .catch(err => console.error("Error fetching books:", err));
+}
+
+function displayBooks(books) {
+    const container = document.getElementById("books-container");
+    container.innerHTML = "";
+
+    books.forEach(book => {
+        const bookElement = document.createElement("div");
+        bookElement.classList.add("book");
+
+        const shortContent = book.content.length > 100 ? book.content.substring(0, 100) + "..." : book.content;
+
+        bookElement.innerHTML = `
+            <img src="${book.cover}" 
+                 alt="Book Cover" 
+                 class="book-cover" 
+                 onerror="this.src='https://via.placeholder.com/150';"> 
+            <h3 contenteditable="true" onblur="editBook('${book.id}', 'title', this.innerText)">${book.title}</h3>
+            <p id="content-${book.id}" data-full="${book.content}">${shortContent}</p>
+            <button id="read-btn-${book.id}" onclick="toggleReadMore('${book.id}')">Read More 📖</button>
+            <button onclick="likeBook('${book.id}')">Like ❤️ <span id="like-${book.id}">${book.likes || 0}</span></button>
+            <button onclick="deleteBook('${book.id}')">Delete ❌</button>
+            <div class="comments">
+                <h4>Comments</h4>
+                <div id="comments-${book.id}">${book.comments.map(c => `<p>${c}</p>`).join("")}</div>
+                <input type="text" id="commentInput-${book.id}" placeholder="Write a comment">
+                <button onclick="addComment('${book.id}')">Comment</button>
+            </div>
+        `;
+        container.appendChild(bookElement);
+    });
+}
+
+
+function publishBook() {
+    const title = document.getElementById("bookTitle").value;
+    const content = document.getElementById("bookContent").value;
+    const cover = document.getElementById("bookCover").value; // Get cover input
+
+    if (!title || !content || !cover) {
+        alert("Please fill in all fields.");
+        return;
     }
-  });
 
-  // Show the selected section
-  let selectedSection = document.getElementById(section === 'library' ? 'book-list' :
-                                                 section === 'write' ? 'publish-new-book' :
-                                                 section === 'profile' ? 'profile-section' : null);
+    const newBook = {
+        title,
+        content,
+        cover, // Ensure cover is included
+        likes: 0,
+        comments: []
+    };
 
-  if (selectedSection) {
-    selectedSection.style.display = 'block';
-  }
-
-  // Call relevant functions
-  if (section === 'library') {
-    if (typeof fetchBooks === "function") {
-      fetchBooks();
-    } else {
-      console.error("fetchBooks function not defined");
-    }
-  } else if (section === 'profile') {
-    if (typeof displayProfile === "function") {
-      displayProfile();
-    } else {
-      console.error("displayProfile function not defined");
-    }
-  }
-}
-
-
-// Fetch books from server
-async function fetchBooks() {
-  try {
-    const response = await fetch('https://tale-nest-mpjk.vercel.app/books');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    books = data; // Save the books data
-    displayBooks(books); // Call to display books
-  } catch (error) {
-    console.error('Error fetching book data:', error);
-    alert('Failed to fetch books. Please try again later.'); // Alert user in case of failure
-  }
-}
-
-// Display books in the DOM
-function displayBooks(bookArray) {
-  const bookList = document.getElementById('book-list');
-  bookList.innerHTML = ''; // Clear existing content
-  bookArray.forEach(book => {
-    const shortDescription = book.content.length > 100 ? `${book.content.substring(0, 100)}...` : book.content;
-
-    const bookDiv = document.createElement('div');
-    bookDiv.classList.add('book');
-    bookDiv.innerHTML = `
-      <h3>${escapeHtml(book.title)}</h3>
-      <img src="${escapeHtml(book.coverImage)}" alt="${escapeHtml(book.title)} Cover" class="book-cover">
-      <p>${escapeHtml(shortDescription)}</p>
-      <button onclick="readMore('${book.id}')">Read More</button>
-      <p>Likes: <span id="likes-${book.id}">${book.likes}</span> 
-      <button class="like-button" onclick="likeBook('${book.id}')">Like</button></p>
-      <button onclick="editBook('${book.id}')">Edit Book</button>
-      <button onclick="deleteBook('${book.id}')">Delete Book</button>
-      <div class="comments">
-        <strong>Comments:</strong>
-        <ul id="comments-${book.id}">
-          ${book.comments.map((comment, index) => `
-            <li>
-              ${escapeHtml(comment.text)}
-              <button onclick="editComment('${book.id}', ${index})">Edit</button>
-            </li>`).join('')}
-        </ul>
-        <input type="text" id="comment-input-${book.id}" placeholder="Add a comment...">
-        <button onclick="commentOnBook('${book.id}')">Comment</button>
-      </div>
-    `;
-    bookList.appendChild(bookDiv);
-  });
-}
-
-// Escape HTML to prevent XSS
-function escapeHtml(string) {
-  const div = document.createElement('div');
-  div.innerText = string;
-  return div.innerHTML;
-}
-
-// Read more about a book
-function readMore(bookId) {
-  const book = books.find(b => b.id === bookId);
-  if (book) {
-    const bookDetail = `
-      <h3>${escapeHtml(book.title)}</h3>
-      <img src="${escapeHtml(book.coverImage)}" alt="${escapeHtml(book.title)} Cover" class="book-cover">
-      <p>${escapeHtml(book.content)}</p>
-      <button onclick="hideReadMore()">Close</button>
-    `;
-
-    const bookDetailSection = document.getElementById('book-detail');
-    bookDetailSection.innerHTML = bookDetail;
-    bookDetailSection.style.display = 'block'; // Show the book detail section
-  }
-}
-
-// Hide the read more detail
-function hideReadMore() {
-  const bookDetailSection = document.getElementById('book-detail');
-  bookDetailSection.style.display = 'none'; // Hide the detail section
+    fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newBook)
+    })
+    .then(res => res.json())
+    .then(() => {
+        fetchBooks(); // Refresh library
+        document.getElementById("bookTitle").value = "";
+        document.getElementById("bookContent").value = "";
+        document.getElementById("bookCover").value = "";
+    })
+    .catch(err => console.error("Error adding book:", err));
 }
 
 // Like a book
-async function likeBook(bookId) {
-  const book = books.find(b => b.id === bookId);
-  if (book) {
-    book.likes += 1; // Update local count
-    document.getElementById(`likes-${book.id}`).textContent = book.likes; // Update UI immediately
-
-    // Send the updated likes to the server
-    await updateBookOnServer(bookId, { likes: book.likes });
-  }
+function likeBook(bookId) {
+    fetch(`${API_URL}/${bookId}`)
+        .then(res => res.json())
+        .then(book => {
+            return fetch(`${API_URL}/${bookId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ likes: book.likes + 1 })
+            });
+        })
+        .then(() => {
+            fetchBooks();
+            logActivity("Liked a book.");
+        })
+        .catch(err => console.error("Error liking book:", err));
 }
 
-// Comment on a book
-async function commentOnBook(bookId) {
-  const commentInput = document.getElementById(`comment-input-${bookId}`);
-  const commentText = commentInput.value.trim();
+// Delete a book
+function deleteBook(bookId) {
+    fetch(`${API_URL}/${bookId}`, { method: "DELETE" })
+        .then(() => {
+            fetchBooks();
+            logActivity("Deleted a book.");
+        })
+        .catch(err => console.error("Error deleting book:", err));
+}
 
-  if (commentText) {
-    const book = books.find(b => b.id === bookId);
-    if (book) {
-      const newComment = { text: commentText };
-      book.comments.push(newComment);
-      userComments.push({ bookId: bookId, text: commentText });
-      commentInput.value = ''; // Clear input field
+// Add a comment
+function addComment(bookId) {
+    const commentInput = document.getElementById(`commentInput-${bookId}`);
+    const commentText = commentInput.value;
 
-      // Update comments on the server
-      await updateCommentsOnServer(bookId, book.comments);
+    if (!commentText) return;
+
+    fetch(`${API_URL}/${bookId}`)
+        .then(res => res.json())
+        .then(book => {
+            const updatedComments = [...book.comments, commentText];
+
+            return fetch(`${API_URL}/${bookId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ comments: updatedComments })
+            });
+        })
+        .then(() => {
+            commentInput.value = "";
+            fetchBooks();
+            logActivity("Commented on a book.");
+        })
+        .catch(err => console.error("Error adding comment:", err));
+}
+
+// Edit book title
+function editBook(bookId, field, value) {
+    fetch(`${API_URL}/${bookId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: value })
+    })
+        .catch(err => console.error("Error editing book:", err));
+}
+
+// Toggle Read More
+function toggleReadMore(bookId) {
+    const contentElement = document.getElementById(`content-${bookId}`);
+    const readBtn = document.getElementById(`read-btn-${bookId}`);
+    const fullContent = contentElement.getAttribute("data-full");
+
+    if (contentElement.innerText.includes("...")) {
+        contentElement.innerText = fullContent;
+        readBtn.innerText = "Show Less ⬆️";
+    } else {
+        contentElement.innerText = fullContent.substring(0, 100) + "...";
+        readBtn.innerText = "Read More 📖";
     }
-  }
 }
 
-// Update comments on the server
-async function updateCommentsOnServer(bookId, comments) {
-  try {
-    const response = await fetch(`https://tale-nest-mpjk.vercel.app/books/${bookId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ comments }),
+// Log user activity
+function logActivity(activity) {
+    userActivity.push({ text: activity, timestamp: new Date().toLocaleTimeString() });
+    saveUserActivity();
+    displayUserActivity();
+}
+
+// Save activity to localStorage
+function saveUserActivity() {
+    localStorage.setItem("userActivity", JSON.stringify(userActivity));
+}
+
+// Load activity from localStorage
+function loadUserActivity() {
+    const storedActivity = localStorage.getItem("userActivity");
+    if (storedActivity) {
+        userActivity = JSON.parse(storedActivity);
+        displayUserActivity();
+    }
+}
+
+// Display user activity in the profile section
+function displayUserActivity() {
+    const activityLog = document.getElementById("activity-log");
+    activityLog.innerHTML = userActivity.map(act => `<p>${act.timestamp} - ${act.text}</p>`).join("");
+}
+
+// Show sections
+function showSection(sectionId) {
+    document.querySelectorAll("section").forEach(section => {
+        section.classList.add("hidden");
     });
 
-    if (response.ok) {
-      displayBooks(books); // Refresh the displayed book list
-      displayProfile(); // Refresh user's profile
-    } else {
-      console.error('Failed to update comments on the server');
-    }
-  } catch (error) {
-    console.error('Error commenting on book:', error);
-  }
+    document.getElementById(sectionId).classList.remove("hidden");
 }
-
-// Display user profile
-function displayProfile() {
-  const likedBooksList = document.getElementById('liked-books-list');
-  const yourCommentsList = document.getElementById('your-comments-list');
-  const yourPublishedBooksList = document.getElementById('your-published-books-list');
-
-  likedBooksList.innerHTML = '';
-  yourCommentsList.innerHTML = '';
-  yourPublishedBooksList.innerHTML = '';
-
-  // Display liked books
-  userLikes.forEach(bookId => {
-    const book = books.find(b => b.id === bookId);
-    if (book) {
-      const listItem = document.createElement('li');
-      listItem.textContent = escapeHtml(book.title);
-      likedBooksList.appendChild(listItem);
-    }
-  });
-
-  // Display user's comments
-  userComments.forEach(comment => {
-    const book = books.find(b => b.id === comment.bookId);
-    if (book) {
-      const listItem = document.createElement('li');
-      listItem.textContent = `Comment on "${escapeHtml(book.title)}": ${escapeHtml(comment.text)}`;
-      yourCommentsList.appendChild(listItem);
-    }
-  });
-
-  // Display user's published books
-  userPublishedBooks.forEach(book => {
-    const listItem = document.createElement('li');
-    listItem.textContent = escapeHtml(book.title);
-    yourPublishedBooksList.appendChild(listItem);
-  });
-}
-
-// Edit a book
-async function editBook(bookId) {
-  const book = books.find(b => b.id === bookId);
-  if (book) {
-    const newTitle = prompt("Edit Book Title:", book.title);
-    const newContent = prompt("Edit Book Content:", book.content);
-    if (newTitle !== null && newContent !== null) {
-      book.title = newTitle;
-      book.content = newContent;
-      await updateBookOnServer(bookId, { title: book.title, content: book.content });
-    }
-  }
-}
-
-// Update book on the server
-async function updateBookOnServer(bookId, updates) {
-  try {
-    const response = await fetch(`https://tale-nest-mpjk.vercel.app/books/${bookId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates),
-    });
-
-    if (!response.ok) {
-      console.error('Failed to update book on the server');
-    } else {
-      displayBooks(books); // Refresh displayed books list
-    }
-  } catch (error) {
-    console.error('Error updating book:', error);
-  }
-}
-
-// Edit a comment
-async function editComment(bookId, commentIndex) {
-  const book = books.find(b => b.id === bookId);
-  if (book && book.comments[commentIndex]) {
-    const newComment = prompt("Edit your comment:", book.comments[commentIndex].text);
-    if (newComment !== null) {
-      book.comments[commentIndex].text = newComment;
-      await updateCommentsOnServer(bookId, book.comments);
-    }
-  }
-}
-
-async function deleteBook(bookId) {
-  console.log(`Attempting to delete book with ID: ${bookId}`);
-
-  if (!bookId) {
-    console.error("Error: Invalid book ID");
-    alert("Error: Invalid book ID");
-    return;
-  }
-
-  try {
-    const token = localStorage.getItem("token"); // Get token if authentication is needed
-
-    const response = await fetch(`https://tale-nest-mpjk.vercel.app/books/${bookId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`, // Add authentication if required
-        "Content-Type": "application/json"
-      }
-    });
-
-    const responseText = await response.text();
-    console.log("Response Status:", response.status);
-    console.log("Response Body:", responseText); // Debug API response
-
-    if (response.ok) {
-      // Remove the book from the local books array
-      books = books.filter((b) => b.id !== bookId);
-      
-      // Remove the book from the UI
-      const bookElement = document.getElementById(`book-${bookId}`);
-      if (bookElement) {
-        bookElement.remove();
-      }
-
-      console.log(" Book deleted successfully.");
-    } else {
-      console.error(" Failed to delete:", response.statusText);
-      alert(` Failed to delete: ${responseText}`);
-    }
-  } catch (error) {
-    console.error(" Fetch error:", error);
-    alert(" An error occurred while deleting the book. Please try again.");
-  }
-}
-
-
-// Publish a new book
-async function publishBook() {
-  const titleInput = document.getElementById('new-book-title');
-  const contentInput = document.getElementById('new-book-content');
-
-  const newTitle = titleInput.value.trim();
-  const newContent = contentInput.value.trim();
-
-  if (newTitle && newContent) {
-    const newBook = {
-      title: newTitle,
-      content: newContent,
-      likes: 0,
-      comments: [],
-      coverImage: 'https://example.com/covers/default_cover.jpg' // Placeholder for cover image
-    };
-
-    try {
-      const response = await fetch('https://tale-nest-mpjk.vercel.app/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newBook),
-      });
-
-      if (response.ok) {
-        const publishedBook = await response.json();
-        books.push(publishedBook);
-        userPublishedBooks.push(publishedBook);
-        displayBooks(books); // Refresh displayed book list
-        displayProfile(); // Refresh user profile
-        titleInput.value = '';
-        contentInput.value = '';
-      } else {
-        console.error('Failed to publish new book on the server');
-      }
-    } catch (error) {
-      console.error('Error publishing a new book:', error);
-    }
-  }
-}
-
-// Search for books
-function searchBooks() {
-  const query = document.getElementById('search').value.toLowerCase();
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(query)
-  );
-  displayBooks(filteredBooks); // Show filtered results
-}
-
-// Show library section on initial load
-showSection('library');
