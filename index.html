@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaleNest</title>
+    <title>Tale Nest</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>TaleNest</h1>
+        <div class="logo-title-container">
+            <h1>Tale Nest</h1>
+            <h2>Your Story Hub</h2>
+            <img src="data:image/png;base64,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" alt="Logo" id="logo"> <!-- Add your logo path here -->
+            
+        </div>
         <nav>
             <button onclick="showSection('login')">Login</button>
             <button onclick="showSection('signup')">Sign Up</button>
@@ -19,23 +24,7 @@
     </header>
 
     <main>
-        <!-- Login Section -->
-        <section id="login-section" style="display: none;">
-            <h2>Login</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="login()">Login</button>
-            <p id="login-message"></p>
-        </section>
-
-        <!-- Signup Section -->
-        <section id="signup-section" style="display: none;">
-            <h2>Sign Up</h2>
-            <input type="text" id="signup-username" placeholder="Username">
-            <input type="password" id="signup-password" placeholder="Password">
-            <button onclick="signup()">Sign Up</button>
-            <p id="signup-message"></p>
-        </section>
+        
 
         <!-- Library Section -->
         <section id="book-list" style="display: none;">
