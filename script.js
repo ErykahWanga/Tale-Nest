@@ -254,4 +254,20 @@ function showSection(sectionId) {
 
     document.getElementById(sectionId).classList.remove("hidden");
 }
+ 
+function searchBooks() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+
+  fetch(API_URL)
+      .then(res => res.json())
+      .then(books => {
+          const filteredBooks = books.filter(book => 
+              book.title.toLowerCase().includes(query) || 
+              book.content.toLowerCase().includes(query)
+          );
+          displayBooks(filteredBooks);
+      })
+      .catch(err => console.error("Error searching books:", err));
+}
+
 
